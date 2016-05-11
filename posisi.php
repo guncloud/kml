@@ -93,20 +93,14 @@ try{
 
 	
 	$kmlOutput = $dom->saveXML();
-	// header('Content-type: application/vnd.google-earth.kml+xml');
-	header('Content-type: application/xml');
+	header('Content-type: application/vnd.google-earth.kml+xml');
+	// header('Content-type: application/xml');
 	echo $kmlOutput;
 	
 	//================================================================================
 	
 }catch(Exception $e){
-	// $jsonResult = array(
-		// 'success' => false,
-		// 'posisi' => $e->getMessage()
-	// );
-	
 	echo $e->getMessage();
 }
-// echo json_encode($jsonResult);
 
 ?>

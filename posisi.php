@@ -26,24 +26,24 @@ try{
 					// s.status = 1
 					// and u.id = $id_user
 				// ;";
-	// $q_wkt = "select max(data_time) wkt
-				// from data d
-					// inner join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur 
-					// inner join ship s on s.id_ship = tu.id_ship
-				// where s.status = 1 and s.id_company = 1
-				// group by tu.id_ship;";
-	$q_wkt = "select 
-		tu.id_ship, 
-		max(case when tu.id_data_type = 1 then round(d.value,2) end) lat,
-		max(case when tu.id_data_type = 2 then round(d.value,2) end) lng
-    from data d
-		inner join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur
-    where data_time in 
-		(select max(data_time) 
-			from data d1 join titik_ukur tu1 on tu1.id_titik_ukur = d1.id_titik_ukur 
-            group by tu1.id_ship)
-group by tu.id_ship
-;";
+	$q_wkt = "select max(data_time) wkt
+				from data d
+					inner join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur 
+					inner join ship s on s.id_ship = tu.id_ship
+				where s.status = 1 and s.id_company = 1
+				group by tu.id_ship;";
+	// $q_wkt = "select 
+		// tu.id_ship, 
+		// max(case when tu.id_data_type = 1 then round(d.value,2) end) lat,
+		// max(case when tu.id_data_type = 2 then round(d.value,2) end) lng
+    // from data d
+		// inner join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur
+    // where data_time in 
+		// (select max(data_time) 
+			// from data d1 join titik_ukur tu1 on tu1.id_titik_ukur = d1.id_titik_ukur 
+            // group by tu1.id_ship)
+// group by tu.id_ship
+// ;";
 	
 	echo $q_wkt."<br>";
 	

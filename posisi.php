@@ -18,14 +18,6 @@ try{
 	$id_user = 1;
 	$tz = '+08:00';
 	
-	
-	// $kapal = "select s.id_ship
-				// from ship s 
-					// join user u  on u.id_company = s.id_company
-				// where 
-					// s.status = 1
-					// and u.id = $id_user
-				// ;";
 	$q_wkt = "select max(data_time) wkt
 				from data d
 					inner join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur 
@@ -45,14 +37,38 @@ try{
 // group by tu.id_ship
 // ;";
 	
-	echo $q_wkt."<br>";
+	// echo $q_wkt."<br>";
 	
 	
 	$stm = $conn->prepare($q_wkt);
 	$stm->execute();
 	$hsl = $stm->fetchAll(PDO::FETCH_OBJ);
+	// $hsl = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-	print_r($hsl);
+	// print_r($hsl);
+	$a = "'";
+	foreach ($hsl as $s){
+		// echo $s->wkt;
+		$a .= $s->wkt."','";
+	}
+	
+	// // $stt = implode(",",$hsl["wkt"]);
+	// echo $a;
+	$b = substr($a,0,-2);
+	// echo $b;
+	
+	$c = "select tu.id_ship, s.name, d.data_time,
+			max(case when tu.id_data_type = 1 then round(d.value,2) end) lat, 
+			max(case when tu.id_data_type = 2 then round(d.value,2) end) lng 
+		from data d 
+			join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur
+			join ship s on s.id_ship = tu.id_ship
+		where d.data_time in ($b)
+		group by tu.id_ship;";
+	
+	// $aa = implode (", ",$hsl);
+	// echo $c;
+	
 	// $qa = '';
 	// foreach ($hsl as $row) {
 		// // echo $row->id_ship.'<br>';
@@ -97,22 +113,22 @@ try{
 
 	// $query = substr($qa,0,-8).";";
 	// // echo $query."<br>"; 
-	// $stm = $conn->prepare($query);
-	// $stm->execute();
-	// $posisi = $stm->fetchAll(PDO::FETCH_OBJ);
+	$stm = $conn->prepare($c);
+	$stm->execute();
+	$posisi = $stm->fetchAll(PDO::FETCH_OBJ);
 	// print_r($posisi);
 
 
-	// $jsonResult = array(
-		// 'success' => true,
-		// 'posisi' => $posisi
-	// );
+	$jsonResult = array(
+		'success' => true,
+		'posisi' => $posisi
+	);
 }catch(PDOException $e){
 	$jsonResult = array(
 		'success' => false,
 		'posisi' => $e->getMessage()
 	);
 }
-// echo json_encode($jsonResult);
+echo json_encode($jsonResult);
 
 ?>

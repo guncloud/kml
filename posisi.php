@@ -3,34 +3,28 @@
 include "koneksi.php";
 
 try{
-	//*
 	$time = isset($_GET['t'])?$_GET['t'] : '07:00';
 	$comp = isset($_GET['c'])?$_GET['c'] : '0';
 	$cc = substr($time,0,1);
 	$tz = ($cc == "-") ? $time :  "+".$time ; 
-	// echo $tz ."<br>"; 
 	
-	$q_wkt = "select max(data_time) wkt 
+	$q_wkt = "select max(convert_tz(from_unixtime(d1.epochtime),'+07:00','$tz')) wkt 
 				from data d1 
 					join titik_ukur tu1 on tu1.id_titik_ukur = d1.id_titik_ukur 
 					join ship s on s.id_ship = tu1.id_ship
 				where s.status = 1
 				group by tu1.id_ship;";
 	
-	// echo $q_wkt."<br>";
 	$stm = $conn->prepare($q_wkt);
 	$stm->execute();
 	$hsl = $stm->fetchAll(PDO::FETCH_OBJ);
-	// $hsl = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 	$a = "'";
 	foreach ($hsl as $s){
 		$a .= $s->wkt."','";
 	}
 	
-	// echo $a;
 	$b = substr($a,0,-2);
-	// echo $b;
 	
 	$c = "select tu.id_ship id, s.name ves, convert_tz(from_unixtime(d.epochtime),'+07:00','$tz') wkt,
 			max(case when tu.id_data_type = 1 then round(d.value,2) end) lat, 
@@ -44,52 +38,54 @@ try{
 	$stm = $conn->prepare($c);
 	$stm->execute();
 	$posisi = $stm->fetchAll(PDO::FETCH_OBJ);
-
-	// $jsonResult = array(
-		// 'success' => true,
-		// 'posisi' => $posisi
-	// );
-	//*/
-	
 	//================================================================================
-	// Creates the Document.
 	$dom = new DOMDocument('1.0', 'UTF-8');
-	
-	// Creates the root KML element and appends it to the root document.
-	// $node = $dom->createElementNS('http:"//earth.google.com/kml/2.1, 'kml');
 	$node = $dom->createElementNS("http://www.opengis.net/kml/2.2", 'kml');
- 
-	$parNode = $dom->appendChild($node);
+	$ParentNode = $dom->appendChild($node);
 
-	// Creates a KML Document element and append it to the KML element.
-	$dnode = $dom->createElement('Document');
-	$docNode = $parNode->appendChild($dnode);
+		$documentNode = $dom->createElement('Document');
+		$doc = $ParentNode->appendChild($documentNode);
 
-	foreach($posisi as $pos){
-		$node = $dom->createElement('Placemark');
-		$placeNode = $docNode->appendChild($node);
-
-		// Creates an id attribute and assign it the value of id column.
-		$placeNode->setAttribute('id', 'placemark' . $pos->id);
-
-		// Create name, and description elements and assigns them the values of the name and address columns from the results.
-		// $nameNode = $dom->createElement('name',htmlentities($row['name']));
-		$nameNode = $dom->createElement('name',htmlentities($pos->ves));
-		$placeNode->appendChild($nameNode);
-		$descNode = $dom->createElement('time', $pos->wkt);
-		$placeNode->appendChild($descNode);
-		// $styleUrl = $dom->createElement('styleUrl', '#' . $loks->type . 'Style');
-		// $placeNode->appendChild($styleUrl);
-		// Creates a Point element.
-		$pointNode = $dom->createElement('Point');
-		$placeNode->appendChild($pointNode);
-
-		// Creates a coordinates element and gives it the value of the lng and lat columns from the results.
-		$coorStr = $pos->lng . ','  . $pos->lat;
-		$coorNode = $dom->createElement('coordinates', $coorStr);
-		$pointNode->appendChild($coorNode);
+		$docnameNode = $dom->createElement('name','Vessel Tracking');
+		$doc->appendChild($docnameNode);
 		
-	}
+		$docdescNode = $dom->createElement('description','Tracking for Marine Vessel');
+		$doc->appendChild($docdescNode);
+		
+		$folderNode = $dom->createElement('Folder');
+		$parFolder = $doc->appendChild($folderNode);
+			$foldnameNode = $dom->createElement('name','Position');
+			$parFolder->appendChild($foldnameNode);
+			
+			foreach($posisi as $pos){
+				$placemark = $dom->createElement('Placemark');
+				$placenode = $parFolder->appendChild($placemark);
+					$placenama = $dom->createElement('name',$pos->ves);
+					$placenode->appendChild($placenama);
+					
+					$wkt = $dom->createElement('time', $pos->wkt);
+					$placenode->appendChild($wkt);
+					
+					$point = $dom->createElement('Point');
+					$pointNode = $placenode->appendChild($point);
+					
+					$coord = $pos->lng.",".$pos->lat;
+					$koordinat = $dom->createElement('coordinates',$coord);
+					$pointNode->appendChild($koordinat);
+			}
+			
+		
+		
+		$folderNode = $dom->createElement('Folder');
+		$parFolder = $doc->appendChild($folderNode);
+			$foldnameNode = $dom->createElement('name','Tracking 24H');
+			$parFolder->appendChild($foldnameNode);
+		
+
+		$folderNode = $dom->createElement('Folder');
+		$parFolder = $doc->appendChild($folderNode);
+			$foldnameNode = $dom->createElement('name','Tracking Today');
+			$parFolder->appendChild($foldnameNode);	
 
 	
 	$kmlOutput = $dom->saveXML();

@@ -46,12 +46,12 @@ try{
 			
 				$Fnode = $dom->createElement('Folder');
 				$FoldNode = $docNode->appendChild($Fnode);
-					$lnode = $dom->createElement('Position');
+					$lnode = $dom->createElement('name','Position');
 					$LokNode = $FoldNode->appendChild($lnode);
 			
 	foreach($posisi as $pos){
 		$plcnode = $dom->createElement('Placemark');
-		$PlaceNode = $LokNode->appendChild($plcnode);
+		$PlaceNode = $FoldNode->appendChild($plcnode);
 		$plcnode->setAttribute('id', $pos->id);
 			$nameNode = $dom->createElement('name',htmlentities($pos->ves));
 			$plcnode->appendChild($nameNode);

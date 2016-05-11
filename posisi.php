@@ -10,12 +10,12 @@ try{
 	$tz = ($cc == "-") ? $time :  "+".$time ; 
 	// echo $tz ."<br>"; 
 	
-	$q_wkt = "select max(convert_tz(from_unixtime(d.epochtime),'+07:00','$tz') ) wkt
-				from data d
-					inner join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur 
-					inner join ship s on s.id_ship = tu.id_ship
-				where s.status = 1 and s.id_company = $comp
-				group by tu.id_ship;";
+	$q_wkt = "select max(data_time) wkt 
+				from data d1 
+					join titik_ukur tu1 on tu1.id_titik_ukur = d1.id_titik_ukur 
+					join ship s on s.id_ship = tu1.id_ship
+				where s.status = 1
+				group by tu1.id_ship;";
 	
 	// echo $q_wkt."<br>";
 	$stm = $conn->prepare($q_wkt);

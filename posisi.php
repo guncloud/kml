@@ -51,17 +51,18 @@ try{
 			
 	foreach($posisi as $pos){
 		$plcnode = $dom->createElement('Placemark');
-		$lnode = $docNode->appendChild($plcnode);
-		$lnode->setAttribute('id', $pos->id);
+		$PlaceNode = $LokNode->appendChild($plcnode);
+		$plcnode->setAttribute('id', $pos->id);
 			$nameNode = $dom->createElement('name',htmlentities($pos->ves));
-			$lnode->appendChild($nameNode);
+			$plcnode->appendChild($nameNode);
 			$timeNode = $dom->createElement('time', $pos->wkt);
-			$lnode->appendChild($timeNode);
+			$plcnode->appendChild($timeNode);
 			$pNode = $dom->createElement('Point');
-			$lnode->appendChild($pNode);
+			$plcnode->appendChild($pNode);
 				$coorStr = $pos->lng . ','  . $pos->lat;
 				$coorNode = $dom->createElement('coordinates', $coorStr);
 				$pNode->appendChild($coorNode);
+		
 	}
 
 	

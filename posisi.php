@@ -63,8 +63,8 @@ try{
 					$placenama = $dom->createElement('name',$pos->ves);
 					$placenode->appendChild($placenama);
 					
-					$wkt = $dom->createElement('time', $pos->wkt);
-					$placenode->appendChild($wkt);
+					$wkt = $dom->createElement('description', 'Last update '. $pos->wkt);
+					$placenode->appendchild($wkt);
 					
 					$point = $dom->createElement('Point');
 					$pointNode = $placenode->appendChild($point);

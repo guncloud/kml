@@ -173,8 +173,19 @@ try{
 			
 			$hrefIc = $dom->createElement('href','img/kapal1.png');
 			$parIcon ->appendChild($hrefIc);
-			
 		
+		$style_2 = $dom->createElement('Style');
+		$style_2->setAttribute('id', 'iconPlatform');
+		$parStyle2 = $doc->appendChild($style_2);
+		
+		$iconStyle = $dom->createElement('IconStyle');
+		$parIconSt = $parStyle2->appendChild($iconStyle);
+		
+			$icon = $dom->createElement('Icon');
+			$parIcon = $parIconSt->appendChild($icon);
+			
+			$hrefIc = $dom->createElement('href','img/platform_1.png');
+			$parIcon ->appendChild($hrefIc);		
 		
 		
 		$folderNode = $dom->createElement('Folder');
@@ -200,12 +211,45 @@ try{
 					$koordinat = $dom->createElement('coordinates',$coord);
 					$pointNode->appendChild($koordinat);
 			}
-			
+		//===============================================
+		$q = "select tu.id_ship id, s.name ves, 
+			max(case when tu.id_data_type = 1 then round(d.value,2) end) lat, 
+			max(case when tu.id_data_type = 2 then round(d.value,2) end) lng 
+		from data d 
+			join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur
+			join ship s on s.id_ship = tu.id_ship
+		where s.status = 0 and s.gateway = 0 and s.id_ship_type in (7,8,9,10)
+		group by tu.id_ship;";
+		$stm = $conn->prepare($q);
+		$stm->execute();
+		$platform = $stm->fetchAll(PDO::FETCH_OBJ);
+		//===============================================
 		
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
 			$foldnameNode = $dom->createElement('name','Platform');
 			$parFolder->appendChild($foldnameNode);
+			
+			foreach($platform as $pf){
+				$placemark = $dom->createElement('Placemark');
+				$placenode = $parFolder->appendChild($placemark);
+					$placenama = $dom->createElement('name',$pf->ves);
+					$placenode->appendChild($placenama);
+					
+					// $wkt = $dom->createElement('description', 'Last update '. $pos->wkt);
+					// $placenode->appendchild($wkt);
+					$icn = $dom->createElement('styleUrl', '#iconPlatform');
+					$placenode->appendchild($icn);
+					
+					$point = $dom->createElement('Point');
+					$pointNode = $placenode->appendChild($point);
+					
+					$coord = $pos->lng.",".$pos->lat;
+					$koordinat = $dom->createElement('coordinates',$coord);
+					$pointNode->appendChild($koordinat);
+			}
+			
+			
 			
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
@@ -221,7 +265,7 @@ try{
 
 	$kmlOutput = $dom->saveXML();
 		header('Content-type: application/vnd.google-earth.kml+xml');
-	// header('Content-type: application/xml');
+		// header('Content-type: application/xml');
 	echo $kmlOutput;
 	
 	

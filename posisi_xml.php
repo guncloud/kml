@@ -121,10 +121,6 @@ try{
 					join ship s on s.id_ship = tu1.id_ship
 				where s.status = 1
 				group by tu1.id_ship;";
-<<<<<<< HEAD
-	
-=======
->>>>>>> 6685e7d98e777cbd5cb92447004ab870f24b4753
 	$stm = $conn->prepare($q_wkt);
 	$stm->execute();
 	$hsl = $stm->fetchAll(PDO::FETCH_OBJ);
@@ -133,13 +129,9 @@ try{
 	foreach ($hsl as $s){
 		$a .= $s->wkt."','";
 	}
-<<<<<<< HEAD
 	
 	$b = substr($a,0,-2);
 	
-=======
-	$b = substr($a,0,-2);
->>>>>>> 6685e7d98e777cbd5cb92447004ab870f24b4753
 	$c = "select tu.id_ship id, s.name ves, convert_tz(from_unixtime(d.epochtime),'+07:00','$tz') wkt,
 			max(case when tu.id_data_type = 1 then round(d.value,2) end) lat, 
 			max(case when tu.id_data_type = 2 then round(d.value,2) end) lng 
@@ -171,7 +163,17 @@ try{
 		
 		$style_1 = $dom->createElement('Style');
 		$style_1->setAttribute('id', 'iconVes');
-		$doc->appendChild($style_1);
+		$parStyle = $doc->appendChild($style_1);
+		
+		$iconStyle = $dom->createElement('IconStyle');
+		$parIconSt = $parStyle->appendChild($iconStyle);
+		
+			$icon = $dom->createElement('Icon');
+			$parIcon = $parIconSt->appendChild($icon);
+			
+			$hrefIc = $dom->createElement('href','img/kapal1.png');
+			$parIcon ->appendChild($hrefIc);
+			
 		
 		
 		
@@ -188,6 +190,8 @@ try{
 					
 					$wkt = $dom->createElement('description', 'Last update '. $pos->wkt);
 					$placenode->appendchild($wkt);
+					$icn = $dom->createElement('styleUrl', '#iconVes');
+					$placenode->appendchild($icn);
 					
 					$point = $dom->createElement('Point');
 					$pointNode = $placenode->appendChild($point);
@@ -216,8 +220,8 @@ try{
 				
 
 	$kmlOutput = $dom->saveXML();
-		// header('Content-type: application/vnd.google-earth.kml+xml');
-	header('Content-type: application/xml');
+		header('Content-type: application/vnd.google-earth.kml+xml');
+	// header('Content-type: application/xml');
 	echo $kmlOutput;
 	
 	

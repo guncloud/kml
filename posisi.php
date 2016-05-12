@@ -51,6 +51,22 @@ try{
 		$docdescNode = $dom->createElement('description','Tracking for Marine Vessel');
 		$doc->appendChild($docdescNode);
 		
+		$style_1 = $dom->createElement('Style');
+		$style_1->setAttribute('id', 'iconVes');
+		$parStyle = $doc->appendChild($style_1);
+		
+		$iconStyle = $dom->createElement('IconStyle');
+		$parIconSt = $parStyle->appendChild($iconStyle);
+		
+			$icon = $dom->createElement('Icon');
+			$parIcon = $parIconSt->appendChild($icon);
+			
+			$hrefIc = $dom->createElement('href','img/kapal1.png');
+			$parIcon ->appendChild($hrefIc);
+			
+		
+		
+		
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
 			$foldnameNode = $dom->createElement('name','Position');
@@ -64,6 +80,8 @@ try{
 					
 					$wkt = $dom->createElement('description', 'Last update '. $pos->wkt);
 					$placenode->appendchild($wkt);
+					$icn = $dom->createElement('styleUrl', '#iconVes');
+					$placenode->appendchild($icn);
 					
 					$point = $dom->createElement('Point');
 					$pointNode = $placenode->appendChild($point);
@@ -74,7 +92,11 @@ try{
 			}
 			
 		
-		
+		$folderNode = $dom->createElement('Folder');
+		$parFolder = $doc->appendChild($folderNode);
+			$foldnameNode = $dom->createElement('name','Platform');
+			$parFolder->appendChild($foldnameNode);
+			
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
 			$foldnameNode = $dom->createElement('name','Tracking 24H');
@@ -86,7 +108,6 @@ try{
 			$foldnameNode = $dom->createElement('name','Tracking Today');
 			$parFolder->appendChild($foldnameNode);	
 
-	
 	$kmlOutput = $dom->saveXML();
 	header('Content-type: application/vnd.google-earth.kml+xml');
 	echo $kmlOutput;

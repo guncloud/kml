@@ -14,7 +14,10 @@ try{
 					join ship s on s.id_ship = tu1.id_ship
 				where s.status = 1
 				group by tu1.id_ship;";
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 6685e7d98e777cbd5cb92447004ab870f24b4753
 	$stm = $conn->prepare($q_wkt);
 	$stm->execute();
 	$hsl = $stm->fetchAll(PDO::FETCH_OBJ);
@@ -23,9 +26,13 @@ try{
 	foreach ($hsl as $s){
 		$a .= $s->wkt."','";
 	}
+<<<<<<< HEAD
 	
 	$b = substr($a,0,-2);
 	
+=======
+	$b = substr($a,0,-2);
+>>>>>>> 6685e7d98e777cbd5cb92447004ab870f24b4753
 	$c = "select tu.id_ship id, s.name ves, convert_tz(from_unixtime(d.epochtime),'+07:00','$tz') wkt,
 			max(case when tu.id_data_type = 1 then round(d.value,2) end) lat, 
 			max(case when tu.id_data_type = 2 then round(d.value,2) end) lng 

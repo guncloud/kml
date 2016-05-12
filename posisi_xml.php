@@ -3,8 +3,10 @@
 include "koneksi.php";
 
 try{
+	$file = isset($_GET['f'])?$_GET['f'] : 'kml';
 	$time = isset($_GET['t'])?$_GET['t'] : '07:00';
 	$comp = isset($_GET['c'])?$_GET['c'] : '0';
+	
 	$cc = substr($time,0,1);
 	$tz = ($cc == "-") ? $time :  "+".$time ; 
 	
@@ -26,8 +28,8 @@ try{
 	$b = substr($a,0,-2);
 	
 	$c = "select tu.id_ship id, s.name ves, convert_tz(from_unixtime(d.epochtime),'+07:00','$tz') wkt,
-			max(case when tu.id_data_type = 1 then round(d.value,2) end) lat, 
-			max(case when tu.id_data_type = 2 then round(d.value,2) end) lng 
+			max(case when tu.id_data_type = 1 then d.value end) lat, 
+			max(case when tu.id_data_type = 2 then d.value end) lng 
 		from data d 
 			join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur
 			join ship s on s.id_ship = tu.id_ship
@@ -110,8 +112,8 @@ try{
 			}
 		//===============================================
 		$q = "select tu.id_ship id, s.name ves, 
-			max(case when tu.id_data_type = 1 then round(d.value,2) end) lat, 
-			max(case when tu.id_data_type = 2 then round(d.value,2) end) lng 
+			max(case when tu.id_data_type = 1 then d.value end) lat, 
+			max(case when tu.id_data_type = 2 then d.value end) lng 
 		from data d 
 			join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur
 			join ship s on s.id_ship = tu.id_ship
@@ -161,10 +163,12 @@ try{
 				
 
 	$kmlOutput = $dom->saveXML();
-		// header('Content-type: application/vnd.google-earth.kml+xml');
-		header('Content-type: application/xml');
-	echo $kmlOutput;
 	
+	if ($file == "xml")
+		header('Content-type: application/xml');
+	else
+		header('Content-type: application/vnd.google-earth.kml+xml');
+	echo $kmlOutput;
 	
 	//================================================================================
 	

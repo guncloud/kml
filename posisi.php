@@ -3,6 +3,7 @@
 include "koneksi.php";
 
 try{
+	$file = isset($_GET['f'])?$_GET['f'] : 'kml';
 	$time = isset($_GET['t'])?$_GET['t'] : '07:00';
 	$comp = isset($_GET['c'])?$_GET['c'] : '0';
 	$cc = substr($time,0,1);
@@ -14,6 +15,7 @@ try{
 					join ship s on s.id_ship = tu1.id_ship
 				where s.status = 1
 				group by tu1.id_ship;";
+
 	$stm = $conn->prepare($q_wkt);
 	$stm->execute();
 	$hsl = $stm->fetchAll(PDO::FETCH_OBJ);
@@ -22,6 +24,7 @@ try{
 	foreach ($hsl as $s){
 		$a .= $s->wkt."','";
 	}
+
 	$b = substr($a,0,-2);
 	
 	$c = "select tu.id_ship id, s.name ves, convert_tz(from_unixtime(d.epochtime),'+07:00','$tz') wkt,
@@ -158,7 +161,10 @@ try{
 				
 
 	$kmlOutput = $dom->saveXML();
-	header('Content-type: application/vnd.google-earth.kml+xml');
+	if ($file == "xml")
+		header('Content-type: application/xml');
+	else
+		header('Content-type: application/vnd.google-earth.kml+xml');
 	echo $kmlOutput;
 	
 	//================================================================================

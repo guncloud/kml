@@ -83,12 +83,16 @@ try{
 		
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
+			$openFold = $dom->createElement('open',1);
+			$parFolder->appendChild($openFold);
 			$foldnameNode = $dom->createElement('name','Position');
 			$parFolder->appendChild($foldnameNode);
 			
 			foreach($posisi as $pos){
 				$placemark = $dom->createElement('Placemark');
 				$placenode = $parFolder->appendChild($placemark);
+					$visibel = $dom->createElement('visibility',0);
+					$placenode->appendChild($visibel);
 					$placenama = $dom->createElement('name',$pos->ves);
 					$placenode->appendChild($placenama);
 					
@@ -126,6 +130,8 @@ try{
 			foreach($platform as $pf){
 				$placemark = $dom->createElement('Placemark');
 				$placenode = $parFolder->appendChild($placemark);
+					$visibel = $dom->createElement('visibility',0);
+					$placenode->appendChild($visibel);
 					$placenama = $dom->createElement('name',$pf->ves);
 					$placenode->appendChild($placenama);
 					
@@ -157,8 +163,8 @@ try{
 				
 
 	$kmlOutput = $dom->saveXML();
-		header('Content-type: application/vnd.google-earth.kml+xml');
-		// header('Content-type: application/xml');
+		// header('Content-type: application/vnd.google-earth.kml+xml');
+		header('Content-type: application/xml');
 	echo $kmlOutput;
 	
 	

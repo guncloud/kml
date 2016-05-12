@@ -88,12 +88,16 @@ try{
 		
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
+			$openFold = $dom->createElement('open',1);
+			$parFolder->appendChild($openFold);
 			$foldnameNode = $dom->createElement('name','Position');
 			$parFolder->appendChild($foldnameNode);
 			
 			foreach($posisi as $pos){
 				$placemark = $dom->createElement('Placemark');
 				$placenode = $parFolder->appendChild($placemark);
+					$visibel = $dom->createElement('visibility',0);
+					$placenode->appendChild($visibel);
 					$placenama = $dom->createElement('name',$pos->ves);
 					$placenode->appendChild($placenama);
 					
@@ -131,6 +135,8 @@ try{
 			foreach($platform as $pf){
 				$placemark = $dom->createElement('Placemark');
 				$placenode = $parFolder->appendChild($placemark);
+					$visibel = $dom->createElement('visibility',0);
+					$placenode->appendChild($visibel);
 					$placenama = $dom->createElement('name',$pf->ves);
 					$placenode->appendChild($placenama);
 					
@@ -158,7 +164,7 @@ try{
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
 			$foldnameNode = $dom->createElement('name','Tracking Today');
-			$parFolder->appendChild($foldnameNode);		
+			$parFolder->appendChild($foldnameNode);			
 				
 
 	$kmlOutput = $dom->saveXML();

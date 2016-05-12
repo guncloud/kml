@@ -104,9 +104,9 @@ try{
 					$point = $dom->createElement('Point');
 					$pointNode = $placenode->appendChild($point);
 					
-					$coord = $pos->lng.",".$pos->lat;
-					$koordinat = $dom->createElement('coordinates',$coord);
-					$pointNode->appendChild($koordinat);
+					// $coord = $pos->lng.",".$pos->lat;
+					// $koordinat = $dom->createElement('coordinates',$coord);
+					// $pointNode->appendChild($koordinat);
 			}
 		//===============================================
 		$q = "select tu.id_ship id, s.name ves, 

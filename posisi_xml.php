@@ -55,6 +55,12 @@ try{
 		$docdescNode = $dom->createElement('description','Tracking for Marine Vessel');
 		$doc->appendChild($docdescNode);
 		
+		$style_1 = $dom->createElement('Style');
+		$style_1->setAttribute('id', 'iconVes');
+		$doc->appendChild($style_1);
+		
+		
+		
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
 			$foldnameNode = $dom->createElement('name','Position');
@@ -66,8 +72,8 @@ try{
 					$placenama = $dom->createElement('name',$pos->ves);
 					$placenode->appendChild($placenama);
 					
-					$wkt = $dom->createElement('time', $pos->wkt);
-					$placenode->appendChild($wkt);
+					$wkt = $dom->createElement('description', 'Last update '. $pos->wkt);
+					$placenode->appendchild($wkt);
 					
 					$point = $dom->createElement('Point');
 					$pointNode = $placenode->appendChild($point);
@@ -78,7 +84,11 @@ try{
 			}
 			
 		
-		
+		$folderNode = $dom->createElement('Folder');
+		$parFolder = $doc->appendChild($folderNode);
+			$foldnameNode = $dom->createElement('name','Platform');
+			$parFolder->appendChild($foldnameNode);
+			
 		$folderNode = $dom->createElement('Folder');
 		$parFolder = $doc->appendChild($folderNode);
 			$foldnameNode = $dom->createElement('name','Tracking 24H');

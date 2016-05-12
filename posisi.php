@@ -101,7 +101,7 @@ try{
 					$placenama = $dom->createElement('name',$pos->ves);
 					$placenode->appendChild($placenama);
 					
-					$wkt = $dom->createElement('description', 'Last update '. $pos->wkt);
+					$wkt = $dom->createElement('description', 'Time : '. $pos->wkt);
 					$placenode->appendchild($wkt);
 					$icn = $dom->createElement('styleUrl', '#iconVes');
 					$placenode->appendchild($icn);
@@ -140,15 +140,13 @@ try{
 					$placenama = $dom->createElement('name',$pf->ves);
 					$placenode->appendChild($placenama);
 					
-					// $wkt = $dom->createElement('description', 'Last update '. $pos->wkt);
-					// $placenode->appendchild($wkt);
 					$icn = $dom->createElement('styleUrl', '#iconPlatform');
 					$placenode->appendchild($icn);
 					
 					$point = $dom->createElement('Point');
 					$pointNode = $placenode->appendChild($point);
 					
-					$coord = $pos->lng.",".$pos->lat;
+					$coord = $pf->lng.",".$pf->lat;
 					$koordinat = $dom->createElement('coordinates',$coord);
 					$pointNode->appendChild($koordinat);
 			}

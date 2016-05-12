@@ -1,4 +1,5 @@
 <?php  
+// $servername = "marine1.daunbiru.com";
 $servername = "localhost";
 $username = "marine";
 $password = "monita2014";

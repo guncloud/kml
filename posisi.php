@@ -115,7 +115,7 @@ try{
 		from data d 
 			join titik_ukur tu on tu.id_titik_ukur = d.id_titik_ukur
 			join ship s on s.id_ship = tu.id_ship
-		where s.status = 0 and s.gateway = 0 and s.id_ship_type in (7,8,9,10)
+		where s.status = 0 and s.gateway = 0 and s.id_ship_type in (7,8,9,10,11)
 		group by tu.id_ship;";
 		$stm = $conn->prepare($q);
 		$stm->execute();
